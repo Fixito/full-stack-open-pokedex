@@ -40,6 +40,8 @@ jobs:
         run: npm run eslint
       - name: Build
         run: npm run build
+      - name: Fail the build intentionally
+        run: exit 1
       - name: Test
         run: npm run test
       - name: E2E tests
@@ -82,7 +84,8 @@ jobs:
         if: success()
         with:
           severity: info
-          details: Test Succeeded!
+          description: 'to https://tr-full-stack-open-pokedex.fly.dev/ by @${{github.actor}}'
+          details:
           text: A new version of Pokedex deployed
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
       - name: Test Failure
@@ -90,6 +93,7 @@ jobs:
         if: failure()
         with:
           severity: error
-          details: Test Failed!
+          description: 'commit https://github.com/${{ github.repository }}/commit/${{ github.sha }} by @${{github.actor}} broke the build'
+          details:
           text: Build failed
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
