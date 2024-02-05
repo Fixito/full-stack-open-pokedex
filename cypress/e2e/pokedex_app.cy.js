@@ -7,7 +7,7 @@ describe('Pokedex', function () {
     );
   });
 
-  it('ivysaur  page can be consulted', function () {
+  it('should navigate to and display details for Ivysaur', function () {
     cy.visit('http://localhost:5000');
     cy.get("a[href='/pokemon/ivysaur']").click();
     cy.contains('chlorophyll');
