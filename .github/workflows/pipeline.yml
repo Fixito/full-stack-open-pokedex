@@ -75,7 +75,6 @@ jobs:
           DEFAULT_BUMP: 'patch'
 
   discord_notification:
-    needs: [simple_deployment_pipeline, tag_release]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
@@ -85,7 +84,6 @@ jobs:
         with:
           severity: info
           description: 'to https://tr-full-stack-open-pokedex.fly.dev/ by @${{github.actor}}'
-          details:
           text: A new version of Pokedex deployed
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
       - name: Test Failure
@@ -94,6 +92,5 @@ jobs:
         with:
           severity: error
           description: 'commit https://github.com/${{ github.repository }}/commit/${{ github.sha }} by @${{github.actor}} broke the build'
-          details:
           text: Build failed
           webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
