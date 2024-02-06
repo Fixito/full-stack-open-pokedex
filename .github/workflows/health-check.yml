@@ -6,12 +6,23 @@ on:
       - main
 
 jobs:
-  steps:
-    uses: jtalk/url-health-check-action@v4
-    with:
-      # Check the following URLs one by one sequentially
-      url: /check
-      # Fail this action after this many failed attempts
-      max-attempts: 3 # Optional, defaults to 1
-      # Delay between retries
-      retry-delay: 5s # Optional, only applicable to max-attempts > 1
+  check_url:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check URL health
+        uses: jtalk/url-health-check-action@v4
+        with:
+          # Check the following URLs one by one sequentially
+          url: 'https://tr-full-stack-open-pokedex.fly.dev/check' # Assure-toi d'inclure le protocole http ou https
+          # Fail this action after this many failed attempts
+          max-attempts: 3 # Optional, defaults to 1
+          # Delay between retries
+          retry-delay: 5s # Optional, only applicable to max-attempts > 1
+      - name: Health Check Failure
+        uses: rjstone/discord-webhook-notify@v1
+        if: failure()
+        with:
+          severity: error
+          description: 'Health check failure for URL /check. The service could not be reached after 3 attempts, with 5-second delays between each try. Please check the service status and refer to the GitHub Actions logs for more details.'
+          text: Ping failed
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
